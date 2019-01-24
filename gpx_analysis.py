@@ -10,6 +10,7 @@ import csv
 # Some book-keeping
 #
 km2mi = 0.621371
+dir = '/home/freddy/insight/data/'
 ext = 'gpx_data/'
 conversion={'marathon'         : 26.219,
             'half_marathon'    : 13.109,
@@ -18,41 +19,15 @@ conversion={'marathon'         : 26.219,
             'ultra_marathon'   : -1.000
 }
 
-def convert(dist):
-    if dist[-1] is 'm':
-            return float(dist[:-1])
-    elif dist[-1] is 'k':
-            return float(dist[:-1])*km2mi
-    else:
-        return -1.0
+def cut_up_url(url):
+    flag = 'meetingid='
+    start = url.find(flag)+len(flag) 
+    end   = url.find('&')
+    substr = url[start:end]
+    return int(substr)
 
-def check_race(race, evt):
-    if race is None:
-        print('Race field is empty...returning 0')
-        return -1.0
-
-    race_list = race.split()
-    if len(race_list)==0:
-        return -1.0
-    
-    # look at the easy case first:
-    if len(race_list) == 1:
-        dist = race_list[0].strip()
-        if dist in conversion:
-            return conversion[dist]
-        else:
-            return convert(dist)
-    else:
-        max = 0.0
-        for i in race_list:
-            dist = convert(i.strip())
-            if dist > max:
-                max = dist
-            print('Multiple types found, returning max of %1.3f' % max)
-            return max    
-        
-def get_gpx_info(filename, dist):
-    name = ext+filename
+def get_gpx_info(filename):
+    name = dir+ext+filename
     elev = []
     try:
         gpx_file = open(name,'r')
@@ -63,8 +38,8 @@ def get_gpx_info(filename, dist):
                 for point in segment.points:
                     elev.append(point.elevation)
     except FileNotFoundError:
-        print('File not found, moving on...')
-
+        print('%s not found, moving on...' % cut_up_url(url))
+        
     sum_up, sum_down = 0.0, 0.0    
     for i in range(len(elev)-1):
         dy = elev[i+1] - elev[i]
@@ -72,13 +47,14 @@ def get_gpx_info(filename, dist):
             sum_up += dy
         else:
             sum_down += dy
-       # print('+dy, -dy \t %1.3f, %1.3f, %1.3f, %1.3f, %1.3f' %
-        #      (sum_up, sum_down, dy, elev[i+1], elev[i]))
+    features = [sum_up, sum_down]
+    return features
+
 ################################################################################
-gpx_info = 'gpx_discover.csv'
+gpx_info = dir + 'gpx_discover.csv'
 df = pd.read_csv(gpx_info)
 cols = list(df.columns)
-
+ID, UP, DOWN = [], [], []
 for index, row in df.iterrows():
     name = str(row[cols[3]])
     if 'no result' in name.lower():
@@ -86,21 +62,17 @@ for index, row in df.iterrows():
         continue
     
     url   = row[cols[0]]
+    meeting_id = cut_up_url(url)
     event = row[cols[1]]
     race  = str(row[cols[2]])
     gpx   = row[cols[3]]
-    dist = check_race(race.lower(),event)
-    
-    get_gpx_info(gpx, dist)
-    #if index==0:
-    #    break
-    
-#def get_site_text(url):
-#    #print(url)
-#    r = requests.get(url)
-#    return r.text
-#soup = BeautifulSoup( get_site_text(str(url)), "html.parser")
-#tables = soup.find_all("table", id="cphBody_gvP")
-#for tr in soup.find_all('tr')[2:]:
-#    tds = tr.find_all('td')
-#    print(tds)
+    elevation = get_gpx_info(gpx)
+    if elevation[0] == 0 and elevation[1] == 0:
+        continue
+    ID.append(meeting_id)
+    UP.append(elevation[0])
+    DOWN.append(elevation[1])
+
+f = open("gpx_elevation_map.csv", "w")
+for idx, val in enumerate(ID):
+    f.write('%1.3f,%1.3f,%1.3f\n' % (ID[idx], UP[idx], DOWN[idx]))
