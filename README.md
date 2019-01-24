@@ -1,2 +1,2 @@
 # letsdothis
-While all true marathons are the same distance, the races are not all equal! This goal of this consulting project for LetsDoThis is to assign a difficulty index to races in order to guide users to their next challenge. In the interest of space, the data has not been uploaded.
+While all true marathons are the same distance, the races are not created equal! The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to assign a difficulty index to races in order to guide users to their next challenge. In the interest of space, the data has not been uploaded.
