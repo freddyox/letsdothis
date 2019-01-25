@@ -75,4 +75,4 @@ for index, row in df.iterrows():
 
 f = open("gpx_elevation_map.csv", "w")
 for idx, val in enumerate(ID):
-    f.write('%1.3f,%1.3f,%1.3f\n' % (ID[idx], UP[idx], DOWN[idx]))
+    f.write('%d,%1.3f,%1.3f\n' % (ID[idx], UP[idx], DOWN[idx]))
