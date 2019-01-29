@@ -117,50 +117,49 @@
 	<div class="form-group">
 
     	  <label for="age" > <font size=2> Age : &nbsp;</font> </label>
-          <tab2><input type="text" id="age" name='age'
-    		       placeholder="eg. 25"></tab2>  
+          <tab2> <select name="age">
+	      <option value="U11">U11</option>
+	      <option value="U13">U13</option>
+	      <option value="U15">U15</option>
+	      <option value="U17">U17</option>
+	      <option value="U20">U20</option>
+	      <option value="U23">U23</option>
+	      <option value="SEN">SEN</option>
+	      <option value="V35">V35</option>
+	      <option value="V40">V40</option>
+	      <option value="V45">V45</option>
+	      <option value="V50">V50</option>
+	      <option value="V55">V55</option>
+	      <option value="V60">V60</option>
+	      <option value="V65">V65</option>
+	      <option value="V70">V70</option>
+	      <option value="V75">V75</option>
+	      <option value="V80">V80</option>
+	      <option value="V85">V85</option>
+    	    </select>
+	  </tab2>  
     	  <br><br>
 
     	  <label for="gender"> <font size=2> Gender: &nbsp;</font> </label>
     	  <tab1><select name="gender">
-              <option value="M">Male</option>
-              <option value="F">Female</option>
-	      <option value="N">Not specified</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
 	  </tab1>
     	  <br><br>
 
-    	  <label for="Race"> <font size=2> 10K Race:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
-    	  <tab> <select name="location">
-    	      <option value="r1">Ayr</option>
-	      <option value="r2">Battersea Park</option>
-	      <option value="r3">Belfast</option>
-	      <option value="r4">Bromham</option>
-	      <option value="r5">Buckden</option>
-	      <option value="r6">Chesterton</option>
-	      <option value="r7">Clitheroe</option>
-	      <option value="r8">Devonvale Hall</option>
-	      <option value="r9">Garstang</option>
-	      <option value="r10">Glengarnock</option>
-	      <option value="r11">Gravesend</option>
-	      <option value="r12">Hereford</option>
-	      <option value="r13">Hull</option>
-	      <option value="r14">Kites Hardwick</option>
-	      <option value="r15">Lancaster</option>
-	      <option value="r16">Lee Valley</option>
-	      <option value="r17">London Greenwich Park</option>
-	      <option value="r18">London Hyde Park</option>
-	      <option value="r19">London Olympic Park</option>
-	      <option value="r20">London Regents Park</option>
-	      <option value="r21">Regent's Park</option>
-	      <option value="r22">Sheffield</option>
-	      <option value="r23">Skegness</option>
-	      <option value="r24">Stoke St Gregory</option>
-	      <option value="r25">Stubbington Green</option>
-	      <option value="r26">Telford</option>
-	      <option value="r27">Ulverston</option>
-	      <option value="r28">Woodcote</option>
-	      <option value="r29">Wymondham</option> 
+	  <label for="race"> <font size=2> Race: &nbsp;</font> </label>
+    	  <tab1><select name="race">
+              <option value="10K">10K</option>
+            </select>
+	  </tab1>
+    	  <br><br>
+
+    	  <label for="event"> <font size=2> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
+    	  <tab> <select name="event">
+    	      {% for key,val in events.items() %}
+	      <option value={{ key }}>{{ val }}</option>
+	      {% endfor %}
     	    </select>
 	  </tab>
     	  <br><br>	     

@@ -63,7 +63,7 @@
         	<img src="/static/images/solar_panel1.jpg">
             <div class="carousel-caption">
               <h2><b>GoSolar</b><br> <font size=4> Predicting return
-              on investment for your solar PV system </font></h2>
+              on investment for your solar PV system </font> </h2>
               <p></p>
             </div>      
           </div>
@@ -72,7 +72,7 @@
         <img src="/static/images/solar_panel2.jpg">
         <div class="carousel-caption">
           <h2><b>GoSolar</b><br> <font size=4> Predicting return on
-          investment for your solar PV system </font></h2>
+          investment for your solar PV system </font> </h2>
           <p></p>
         </div>      
       </div>
@@ -80,7 +80,7 @@
       <div class="item">
         <img src="/static/images/solar_panel3.jpg">
         <div class="carousel-caption">
-          <h2><b>GoSolar</b><br> <font size=4> Predicting return on
+          <h2><b>GoSolar</b><br>  <font size=4> Predicting return on
           investment for your solar PV system </font> </h2>
           <p></p>
         </div>      
@@ -115,11 +115,13 @@
   
     <div class="starter-template">
       <h3>Enter your information for the state of Massachusetts</h3>
-        <br> <br>
+        <br> 
+        <font color="red" size=4>Please check your inputs again! Currently works only for zipcodes in MA. The array size should be less than 625 sq. meters. </font> <br><br>
+        
       <form  action="/output" method="GET">
        <div class="form-group">
 
-    	  <label for="zipcode" > <font size=2> Zip code (MA) : &nbsp;</font> </label>
+    <label for="zipcode" > <font size=2> Zip code (MA) : &nbsp;</font> </label>
           <tab2><input type="text" id="zipcode" name='zipcode'
     		 placeholder="eg. 02038"></tab2>  
     	  <br><br>
@@ -189,7 +191,7 @@
     	    <option value="c19"> South Mountain Company </option>
     	    <option value="c20"> 1st Light Energy </option>    
     	  </select> </tab1>
-	  
+ 
         <br><br><br>    
           <button type="submit" class="btn btn-info btn-lg">  Submit</button>
     </div>
