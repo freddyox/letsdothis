@@ -1,7 +1,5 @@
 # letsdothis
-While all true marathons are the same distance, the races are not created equal! The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to assign a difficulty index to races in order to guide users to their next challenge. This project was done as a part of NYC Insight Data Science program. 
-
-In the interest of space, the data has not been uploaded.
+While all true marathons are the same distance, the races are not created equal! The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to assign a difficulty index to races in order to guide users to their next challenge. This project was done as a part of NYC Insight Data Science program. In the interest of space, the scraped and cleaned data has not been uploaded.
 
 The data-scraping and cleaning was time intensive, and has been done in multiple stages as follows: for the runner finish time tables, which have been scraped from <a href="https://www.runbritainrankings.com//">runbritain</a>, the pipeline is:
 * scraped with spider/spider.py
