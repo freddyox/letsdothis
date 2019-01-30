@@ -4,7 +4,8 @@ from flask import request
 import pandas as pd
 
 race_type = '10K'
-input_dir = '/home/freddy/insight/letsdothis/inputs/'
+#input_dir = '/home/freddy/insight/letsdothis/inputs/'
+input_dir = '/home/freddy/insight/letsdothis/inputs/testing/'
 input_age   = race_type + '/age_map_' + race_type + '.csv'
 input_times = race_type + '/avg_times_' + race_type + '.csv'
 input_beta  = race_type + '/beta_' + race_type + '.csv'
@@ -39,6 +40,11 @@ def get_gpx_info(id):
     sigma  = dict(zip(gpx_df.meeting_id, gpx_df.sigma))[id]
     return [sum_up,sigma,diff]
 
+def get_min_time_simple(ID):
+    df = pd.read_csv(input_dir+input_times)
+    time_map = dict(zip(df.meeting_id, df.min_time))
+    return time_map[ID]
+
 def get_min_time(ID,sex,age):
     df = pd.read_csv(input_dir+input_times)
     temp=df[(df.meeting_id==ID) & (df.sex==sex)]
@@ -61,7 +67,6 @@ def get_min_time(ID,sex,age):
                 if Age[i] < age:
                     age = Age[i]
                     break
-    #print(age,success)
     row = temp.loc[(temp['age_group']==age) & 
                    (temp['sex']==sex) &
                    (temp['meeting_id'] == ID)]
@@ -107,19 +112,20 @@ def output():
     sex      = gender_type.map(sex_map).astype(int)
     age      = age_type.map(age_map).astype(int)
     gpx_info = get_gpx_info(ID)
-    time = get_min_time(ID,int(sex),int(age))
+    #time = get_min_time(ID,int(sex),int(age))
+    time = get_min_time_simple(ID)
     beta_map = make_map(input_dir+input_beta)
 
     # calculate beta
     x = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
     b = [beta_map['age_group'], beta_map['sex'],beta_map['min_time'],
              beta_map['sum_up'],beta_map['sigma'],beta_map['diff']]
+    #print(x,b)
+    
     betax = 0.0
     for idx, val in enumerate(x):
         betax += x[idx]*b[idx]
-
+    print(float(betax))
     betax = float(betax)
-    score = float(get_score(betax))    
-    print(betax,score)    
-    print(gender_type[0], age_type[0])
+    score = float(get_score(betax))
     return render_template("output.html", betax=betax, score=score)

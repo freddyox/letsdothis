@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>GoSolar: Solar energy output estimator </title>
+    <title>Lets Do This!</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="GoSolar">
-  <meta name="author" content="Kalyan Allada">
+    <meta name="description" content="LetsDoThis">
+  <meta name="author" content="Richard F Obrecht">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="../static/css/custom.css" >
   
@@ -33,7 +33,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-              <a class="navbar-brand" href="/" ><b><font size=5>GoSolar</b></font></a>
+              <a class="navbar-brand" href="/" ><b><font size=5>LetsDoThis</b></font></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -59,36 +59,31 @@
     </ol>
 
     <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-   
+    <div class="carousel-inner" role="listbox">  
       <div class="item active">        
-        	<img src="/static/images/solar_panel1.jpg">
-            <div class="carousel-caption">
-              <h2><b>GoSolar</b><br> <font size=4>  Predicting return
-              on investment for your solar PV system </font> </h2>
-              <p></p>
-            </div>      
-          </div>
+        <img src="/static/images/logo.png">
+        <div class="carousel-caption">
+          <h2><b>LetsDoThis</b><br> <font size=4> Estimating the difficulty of a race</font></h2>
+          <p></p>
+        </div>      
+      </div>
 
       <div class="item">
-        <img src="/static/images/solar_panel2.jpg">
+        <img src="/static/images/logo.png">
         <div class="carousel-caption">
-          <h2><b>GoSolar</b><br> <font size=4> Predicting return on
-          investment for your solar PV system  </font> </h2>
+          <h2><b>LetsDoThis</b><br> <font size=4> Estimating the difficulty of a race </font></h2>
           <p></p>
         </div>      
       </div>
       
       <div class="item">
-        <img src="/static/images/solar_panel3.jpg">
+        <img src="/static/images/logo.png">
         <div class="carousel-caption">
-          <h2><b>GoSolar</b><br><font size=4>  Predicting return on
-          investment for your solar PV system  </font> </h2>
+          <h2><b>LetsDoThis</b><br> <font size=4> Estimating the difficulty of a race </font></h2>
           <p></p>
         </div>      
-      </div>
-   
-   </div>
+      </div> 
+    </div>
 
     <!-- Left and right controls -->
     <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
@@ -103,26 +98,23 @@
 
  
     <div class="starter-template">
-         <h3> Your solar estimations:</h3>
-        <br><br>
+         <h3>Results:</h3>
       <form  action="/output" method="GET">
         <div class="form-group">
     	  <br>
-	  <h4>BetaX: {{ betax }} </h4> 
+	  <h4>BetaX: {{ '%0.2f'|format(betax|float)  }} </h4> 
           <br>
-	  <h4>Difficulty Index: {{ score }} </h4> 
+	  <h4>Difficulty Index: {{ '%0.1f'|format(score*10.0|float) }} </h4> 
 	  <br> <br>
        <a href="/index" class="btn btn-info btn-lg">
           <span class="glyphicon glyphicon-home"></span> Home
         </a>
-
       </div>     
      </form>
 
 
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
       <script src="../static/js/bootstrap.min.js"></script>
-      
     </div>
 
  <br>
@@ -131,7 +123,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <p>Copyright &copy; GoSolar 2017</p>
+                    <p>Copyright &copy; LetsDoThis 2019</p>
                 </div>
             </div>
             <!-- /.row -->
