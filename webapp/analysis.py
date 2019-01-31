@@ -1,6 +1,6 @@
 import pandas as pd
 
-race_type = '10K'
+race_type = 'Mar'
 input_dir = '/home/freddy/insight/letsdothis/inputs/'
 input_age   = race_type + '/age_map_' + race_type + '.csv'
 input_times = race_type + '/avg_times_' + race_type + '.csv'

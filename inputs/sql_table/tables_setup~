@@ -1,0 +1,5 @@
+CREATE TABLE race_info ( meeting_id INT NOT NULL, min_time FLOAT NOT NULL, sum_up FLOAT NOT NULL, sigma FLOAT NOT NULL, diff FLOAT NOT NULL, dt FLOAT NOT NULL, event_title VARCHAR(255), race_type VARCHAR(255), PRIMARY KEY (meeting_id) );
+
+LOAD DATA LOCAL INFILE '/home/freddy/insight/letsdothis/inputs/sql_table/output.csv' INTO TABLE race_info FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 ROWS (meeting_id, min_time, sum_up, sigma, diff, dt, event_title, race_type);
+
+SELECT* FROM race_info;

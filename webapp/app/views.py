@@ -1,17 +1,17 @@
 from flask import render_template, url_for
 from app import app
 from flask import request
+from flask_wtf import FlaskForm
+from wtforms import SelectField
 import pandas as pd
 import analysis
+from event_handler import event_handler
 
 @app.route('/')
 @app.route('/index')
 def index():
-    race_type   = str(request.args.get('race'))
-    race_type   =  pd.Series(race_type)
-    print(race_type)
-    
-    events = analysis.get_events('10K')
+    d = event_handler()
+    events = d.get_events('Mar')
     return render_template("index.html", events=events)
 
 @app.route('/about')
