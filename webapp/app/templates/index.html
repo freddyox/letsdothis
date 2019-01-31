@@ -14,7 +14,8 @@
     
     <!-- Custom styles for this template -->
     <!--link href="./starter-template.css" rel="stylesheet"> -->
-    <link href="../static/css/starter-template.css" rel="stylesheet"> 
+    <link href="../static/css/starter-template.css" rel="stylesheet">
+
   </head>
 
   <body>
@@ -113,7 +114,7 @@
     <div class="starter-template">
       <h3>Enter your information</h3>
       <br> <br>
-      <form  action="/output" method="GET">
+      <form action="/output" method="GET">
 	<div class="form-group">
 
     	  <label for="age" > <font size=2> Age : &nbsp;</font> </label>
@@ -124,7 +125,7 @@
 	      <option value="U17">U17</option>
 	      <option value="U20">U20</option>
 	      <option value="U23">U23</option>
-	      <option value="SEN">SEN</option>
+	      <option value="SEN" selected>SEN</option>
 	      <option value="V35">V35</option>
 	      <option value="V40">V40</option>
 	      <option value="V45">V45</option>
@@ -147,13 +148,13 @@
             </select>
 	  </tab1>
     	  <br><br>
-
-	  <label for="race"> <font size=2> Race: &nbsp;</font> </label>
-    	  <tab1><select name="race">
-              <option value="10K">10K</option>
-            </select>
-	  </tab1>
-    	  <br><br>
+	    <label for="race"> <font size=2> Race: &nbsp;</font> </label>
+    	    <tab1><select name="race">
+		<option value="10K">10K</option>
+		<option value="Mar">Marathon</option>
+              </select>
+	    </tab1>
+    	    <br><br>
 
     	  <label for="event"> <font size=2> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
     	  <tab> <select name="event">
@@ -161,11 +162,10 @@
 	      <option value={{ key }}>{{ val }}</option>
 	      {% endfor %}
     	    </select>
-	  </tab>
+	  </tab> 
     	  <br><br>	     
-          <button type="enter" class="btn btn-info btn-lg"> Enter</button>
+          <button type="enter" class="btn btn-info btn-lg"> Run</button>
 	</div>
-	
       </form>
       
       <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
