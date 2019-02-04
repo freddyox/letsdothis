@@ -59,8 +59,8 @@ def output():
     print('\t ID    = {}'.format(ID))
     print('\t Event = {}'.format(event))
     
-    time     = get_time(ID)
-    gpx_info = get_gpx_info(ID, get_event(ID), True)
+    time     = get_time(ID, event, True)
+    gpx_info = get_gpx_info(ID, event, True)
     print('Course Input:')
     print('\t time   = {}'.format(time))
     print('\t sum_up = {}'.format(gpx_info[0]))
@@ -109,11 +109,20 @@ def get_event(ID):
     record = cur.fetchall()
     return record[0][0]
 
-def get_time(ID):
-    sql_select_query = """SELECT meeting_id, min_time FROM race_info WHERE meeting_id = %s"""
-    cur.execute(sql_select_query, (str(ID), ))
+def get_time(ID, event, use_event=True):
+    sql_select_query = """SELECT meeting_id, min_time FROM race_info WHERE event_title = %s"""
+    flag = str(event)
+    cur.execute(sql_select_query, (str(flag), ))
     record = cur.fetchall()
-    return record[0][1]
+
+    if len(record) > 1:
+        print('{} has {} records => averaging times'.format(event,len(record)))
+    time_avg = 0.0
+    for row in record:
+        time_avg += row[1]
+    N = len(record)
+    time_avg /= N
+    return time_avg
 
 def get_gpx_info(ID, event, use_event=True):
     sql_select_query = """SELECT meeting_id, sum_up, sigma, diff FROM race_info WHERE meeting_id = %s"""
