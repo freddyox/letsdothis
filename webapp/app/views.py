@@ -17,6 +17,7 @@ cur =conn.cursor()
 @app.route('/index')
 def index():
     events = sql_get_events("Mar")
+    # Let's sort the events, which is nicer for the user
     events_sort = sorted(events.items(), key=operator.itemgetter(1))
     return render_template("index.html", events=events_sort)
 
@@ -71,6 +72,10 @@ def output():
       
     beta     = get_beta(race_type)
     X = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
+
+    print('avg sigma=',get_avg('sigma', race_type))
+    
+    # Perform the dot product for our user:
     betax = 0.0
     for idx, val in enumerate(X):
         betax += X[idx]*beta[idx]
@@ -179,3 +184,18 @@ def get_score(betax, race_type):
             score = ys[idx]
             break
     return score
+
+def get_avg(column_name, race_type):
+    sql_select_query = """SELECT  AVG(min_time), AVG(sum_up), AVG(sigma), AVG(diff), AVG(dt) FROM race_info WHERE race_type = %s"""
+    input = [str(race_type)]
+    cur.execute(sql_select_query, input)
+    record = cur.fetchall()
+    rec_dict = {'min_time': record[0][0],
+                'sum_up'  : record[0][1],
+                'sigma'   : record[0][2],
+                'diff'    : record[0][3],
+                'dt'      : record[0][4]}
+    if column_name in rec_dict:
+        return rec_dict[column_name]
+    else:
+        return 0.0
