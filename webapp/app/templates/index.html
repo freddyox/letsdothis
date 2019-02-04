@@ -159,7 +159,7 @@
 
     	  <label for="event"> <font size=2> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
     	  <tab> <select name="event">
-    	      {% for key,val in events.items() %}
+    	      {% for key,val in events %}
 	      <option value={{ key }}>{{ val }}</option>
 	      {% endfor %}
     	    </select>

@@ -2,6 +2,7 @@ from flask import render_template, url_for, request, Flask
 from app import app
 import pandas as pd
 from flaskext.mysql import MySQL
+import operator
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'freddy'
@@ -16,7 +17,8 @@ cur =conn.cursor()
 @app.route('/index')
 def index():
     events = sql_get_events("Mar")
-    return render_template("index.html", events=events)
+    events_sort = sorted(events.items(), key=operator.itemgetter(1))
+    return render_template("index.html", events=events_sort)
 
 @app.route('/about')
 def about():
