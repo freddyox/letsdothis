@@ -10,6 +10,9 @@ import operator # sorting dictionary
 import random
 import string
 
+############################################################
+# Set up the database
+#
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'freddy'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'N@c1remaLane88'
@@ -19,10 +22,10 @@ mysql.init_app(app)
 conn = mysql.connect()
 cur  = conn.cursor()
 
+###########################
 conversion={'Mar': 26.219,
             '10K': 6.214
 }
-
 
 @app.route('/')
 @app.route('/index')
@@ -100,7 +103,9 @@ def output():
     name = build_plot(beta, gpx, race_type, ID)
     return render_template("output.html", betax=betax, score=score,
                            event=event, beta=beta, args=args, name=name)
-
+################################################################################
+# Other methods to help output
+#
 def build_plot(beta, gpx, race_type, meeting_id):
     labels = ['Age', 'Sex', 'Time', 'Elevation', 'Elevation \n Std. Dev.', 'Elevation \n Difference']
     xint = range(len(labels))
@@ -144,11 +149,10 @@ def build_plot(beta, gpx, race_type, meeting_id):
     
     plt.tight_layout()
 
-    elevation_dict = get_elevation_dict(meeting_id, race_type)
-    bins, elevation = elevation_dict.keys(), elevation_dict.values()
+    bins, elevation = get_elevation_dict(meeting_id, race_type)
     ax3 = plt.subplot2grid((2, 2), (1, 1), colspan=1)
     ax3.plot(bins, elevation)
-    plt.ylabel('Elevation (m)', fontsize=10)
+    plt.ylabel('Course Elevation (m)', fontsize=10)
     plt.xlabel('Distance (mi)', fontsize=10)
     plt.tight_layout()
     
@@ -276,9 +280,10 @@ def get_elevation_dict(meeting_id, race_type):
     input = [str(meeting_id)]
     cur.execute(sql_select_query, input)
     record = cur.fetchall()
-    data = {}
+    xval, yval = [],[]
     N = len(record)
+    dN = int(N * 0.01*N)
     for row in record:
-        xval = (row[0] / N) * conversion[str(race_type)]
-        data[xval] = row[1]
-    return data
+        xval.append( (row[0] / float(N)) * float(conversion[str(race_type)]) )
+        yval.append(row[1])
+    return [xval,yval]
