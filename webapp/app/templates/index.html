@@ -113,12 +113,12 @@
 
     
     <div class="starter-template">
-      <h3>Enter your information</h3>
+      <h3><b>Enter your information:</b></h3>
       <br> <br>
       <form action="/output" method="GET">
 	<div class="form-group">
 
-    	  <label for="age" > <font size=2> Age : &nbsp;</font> </label>
+    	  <label for="age" > <font size=3> Age : &nbsp;</font> </label>
           <tab3> <select name="age">
 	      <option value="U11">U11</option>
 	      <option value="U13">U13</option>
@@ -142,14 +142,14 @@
 	  </tab3>  
     	  <br><br>
 
-    	  <label for="gender"> <font size=2> Sex: &nbsp;</font> </label>
+    	  <label for="gender"> <font size=3> Sex: &nbsp;</font> </label>
     	  <tab2><select name="gender">
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
 	  </tab2>
     	  <br><br>
-	    <label for="race"> <font size=2> Race: &nbsp;</font> </label>
+	    <label for="race"> <font size=3> Race: &nbsp;</font> </label>
     	    <tab1><select name="race">
 		<option value="10K">10K</option>
 		<option value="Mar" selected>Marathon</option>
@@ -157,7 +157,7 @@
 	    </tab1>
     	    <br><br>
 
-    	  <label for="event"> <font size=2> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
+    	  <label for="event"> <font size=3> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
     	  <tab> <select name="event">
     	      {% for key,val in events %}
 	      <option value={{ key }}>{{ val }}</option>

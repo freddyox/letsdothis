@@ -173,17 +173,19 @@ def build_plot(beta, gpx, race_type, meeting_id):
     sum_down_a = sum_up_a - diff_a
     print(sum_up, sum_up_a, diff, diff_a, sum_down, sum_down_a, 'TESTING')
     print(gpx[0], sum_up)
+    
     # Part 2
     labels_nice = ['Elev \n Gain', 'Avg Elev \n Gain', 'Elev \n Loss', 'Avg Elev \n Loss']
     labels = ['1','2','3','4']
     values = [sum_up, sum_up_a, sum_down, sum_down_a]
+    values = [x/Dist for x in values]
     fig2 = plt.figure()
     ax22 = plt.subplot(111)
     palette3 = ['#ff7f0e','#1f77b4','#ff7f0e','#1f77b4']
     ax22.barh(labels, values, align='center', color=palette3, height=1.0)
     ax22.set_yticklabels(labels_nice)
     ax22.invert_yaxis()  # labels read top-to-bottom
-    ax22.set_xlabel('Elevation gain/loss (m)')
+    ax22.set_xlabel('Elevation Gain/Loss Normalized by Distance (m/mi)')
     plt.title("GPS Features")
     name_gpx = 'app/static/images/plots/gpx_{}.png'.format(str(rndstring))
     plt.grid()
