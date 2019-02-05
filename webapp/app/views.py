@@ -14,10 +14,10 @@ import string
 # Set up the database
 #
 mysql = MySQL()
-app.config['MYSQL_DATABASE_USER'] = 'freddy'
+app.config['MYSQL_DATABASE_USER']     = 'freddy'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'N@c1remaLane88'
-app.config['MYSQL_DATABASE_DB'] = 'app'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_DB']       = 'app'
+app.config['MYSQL_DATABASE_HOST']     = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
 cur  = conn.cursor()
@@ -100,9 +100,9 @@ def output():
 
     gpx = gpx_info
     gpx.append(time)
-    name = build_plot(beta, gpx, race_type, ID)
+    name,name_gpx = build_plot(beta, gpx, race_type, ID)
     return render_template("output.html", betax=betax, score=score,
-                           event=event, beta=beta, args=args, name=name)
+                           event=event, beta=beta, args=args, name=name, name_gpx=name_gpx)
 ################################################################################
 # Other methods to help output
 #
@@ -120,10 +120,12 @@ def build_plot(beta, gpx, race_type, meeting_id):
     
     fig = plt.figure()
     ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
+    plt.grid()
     ax1.bar(xint, beta, width=1.0, color=palette)
     plt.ylabel('Importance', fontsize=12)
     plt.title('Regression Feature Importance')
     plt.xticks(xint, labels, rotation=0, wrap=True)
+
     plt.tight_layout()
 
     # Let's get the averages for the gpx list for comparision
@@ -140,8 +142,8 @@ def build_plot(beta, gpx, race_type, meeting_id):
     max_val = max(gpx[3],averages[3])
     ax2.bar(xint,vals, width=1.0, color=palette2)
     ax2.set_ylim(0.85*min_val, 1.15*max_val)
-    plt.ylabel('Finish Time (min)', fontsize=10)
-    plt.xticks(xint, ['Time', 'Average \n Time'], rotation=0, wrap=True)
+    plt.ylabel('Finish Time (min)', fontsize=12)
+    plt.xticks(xint, ['Course \n Time', 'Average \n Time'], rotation=0, wrap=True)
 
     legend_elements = [Patch(facecolor=palette2[0], label='Course Median Time'),
                        Patch(facecolor=palette2[1], label='{} Median Time'.format(race_type))]
@@ -152,16 +154,34 @@ def build_plot(beta, gpx, race_type, meeting_id):
     bins, elevation = get_elevation_dict(meeting_id, race_type)
     ax3 = plt.subplot2grid((2, 2), (1, 1), colspan=1)
     ax3.plot(bins, elevation)
-    plt.ylabel('Course Elevation (m)', fontsize=10)
+    plt.ylabel('Course Elevation (m)', fontsize=12)
     plt.xlabel('Distance (mi)', fontsize=10)
     plt.tight_layout()
     
     rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
-    name = 'app/static/images/plots/temp_{}.png'.format(str(rndstring))
+    name     = 'app/static/images/plots/features_{}.png'.format(str(rndstring))
     plt.savefig(name)
-    return name[3:]
 
-    
+    sum_up   = gpx[0]
+    diff     = gpx[2]
+    sum_down = abs(sum_up - diff)
+    sum_up_a = get_avg("sum_up",race_type)
+    sum_down_a = abs(sum_up_a - get_avg("diff",race_type))
+    # Part 2
+    labels = ['Elev \n Gain', 'Avg Elev \n Gain', 'Elev \n Loss', 'Avg Elev\n Loss']
+    values = [sum_up, sum_up_a, sum_down, sum_down_a]
+    fig2, ax22 = plt.subplots()
+    palette3 = ['#1f77b4','#ff7f0e','#ff7f0e','#1f77b4']
+    ax22.barh(labels, values, align='center', color=palette3, height=1.0)
+    ax22.set_yticklabels(labels)
+    ax22.invert_yaxis()  # labels read top-to-bottom
+    ax22.set_xlabel('Elevation gain/loss normalized by race distance (m/mi)')
+    plt.title("GPS Features")
+    name_gpx = 'app/static/images/plots/gpx_{}.png'.format(str(rndstring))
+    plt.grid()
+    plt.savefig(name_gpx)
+    return [name[3:], name_gpx[3:]]
+   
 def sql_get_events(flag, unique=True):
     sql_select_query = """SELECT meeting_id, event_title FROM race_info WHERE race_type = %s ORDER BY event_title"""
 

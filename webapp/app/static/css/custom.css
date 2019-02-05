@@ -3,4 +3,17 @@
     border-color:#003144;
     border-radius:0;
 }
+.figure {
+  display: table;
+  margin: 0;
+}
 
+.figure img {
+  max-width: 100%;
+}
+
+.figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  padding: 10px;
+}

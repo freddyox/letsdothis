@@ -99,26 +99,48 @@
     </div> <!--end of carousel > --> 
     
     <div class="starter-template">
-      <h1>Results</h1>
-      <form  action="/output" method="GET">
-        <div class="form-group">
-	  <br>
-	  <h3>Difficulty Index: {{ '%0.1f'|format(score*10.0|float) }} </h3>
-	  <h3>Course: {{ event }} </h3>
-	  <br>
-	</div>	
-      </form>
+      <div class="form-group">
+	<br>
+	<h1><b>Difficulty Index: {{ '%0.1f'|format(score*10.0|float) }} </b></h1>
+	<h1><b>Course: {{ event }} </b></h1>
+      </div><br>
+      <figure>
+	<img src="{{ name }}" alt="" width="55%" height="50%">
+	<figcaption><font size=5><b>Top Panel:</b> The feature importance of the regularized
+	    linear regression model where <font color="green">green</font>
+	    (<font color="red">red</font>) affects race finish times in the
+	    <font color="green">+</font> (<font color="red">-</font>) direction, which
+	    outputs a <font color="green">less</font> (<font color="red">more</font>) difficult course. 
+	    <b>Bottom Left:</b> Comparing the course median finish time to the average of all courses; larger
+	    course times generally are associated with a more difficult course.
+	    <b>Bottom Right:</b> The course elevation profile where more elevation gain leads to higher difficulty
+	    scores.
+	</font></figcaption>
+      </figure>
+      
+      <br><br>
 
-      <img src="{{ name }}" alt="" width="80%" height="100%">
+      <figure>
+	<img src="{{ name_gpx }}" alt="" width="50%" height="75%">
+	<figcaption><font size=5>Features extracted from GPS information, specifically the elevation
+	    gain and loss which has been normalized by the race distance. For comparison, the elevation
+	    features are compared to the average of all courses. Typically, races with large elevation gains
+	    tend to be more difficult.
+	</font></figcaption>
+      </figure>
+
+      <br><br>
       
       <div class="starter-template_v2">
-	<h2>What Happened?</h2>
-        <div class="form-group">
+	<h2><b><font size=7>What Happened in words...</font></b></h2>
+	<div class="form-group">
 	</div>
-	<p><font size=5>You chose to calculate the difficulty for the {{ args[3] }} for a
-	    {{args[1]}} in the age bracket {{args[0]}}. In addition to GPS information
-	    about the course, these features are used in the difficulty calculation, and
-	    either positively or negatively affect the score in the following manner:</font>
+	<ul>
+	  <li><p><font size=5>You chose to calculate the difficulty for the {{ args[3] }} for a
+		{{args[1]}} in the age bracket {{args[0]}}. In addition to GPS information
+		about the course, these features are used in the difficulty calculation, and
+		either positively or negatively affect the score in the following manner (summarized
+		by the top panel in the Figure):</font></p>
 	    <table style="width:100%", 'font-size:100%'>
 	      <tr>
 		<th>Feature</th>
@@ -131,9 +153,9 @@
 		<th>Age is a categorical variable ranging from 0-17.</th>
 	      </tr>
 	      <tr>
-		<th>Gender</th>
+		<th>Sex</th>
 		<th> {{ '%0.3f'|format(beta[1]|float) }}</th>
-		<th>Gender is a categorical variable ranging from 1-2.</th>
+		<th>Sex is a categorical variable ranging from 1-2.</th>
 	      </tr>
 	      <tr>
 		<th>Time</th>
@@ -148,7 +170,7 @@
 	      <tr>
 		<th>Std. Dev.</th>
 		<th> {{ '%0.3f'|format(beta[4]|float) }}</th>
-		<th>The std dev. in the elevation mean divided by distance (m/mi).</th>
+		<th>Std dev. in the elevation mean divided by distance (m/mi).</th>
 	      </tr>
 	      <tr>
 		<th>Elevation Difference</th>
@@ -156,11 +178,20 @@
 		<th>Difference in the elevation gain and loss divided by distance (m/mi).</th>
 	      </tr>
 	    </table>
-	</p>
+	  </li><br>
+	  <li><font size=5>Bottom left panel compares the median finish time for the {{ event }} to the
+	      averaged median finish time
+	      for all races of this type. If the course time is greater than
+	      the average, then the course typically gets a more difficult score.</font></li><br>
+	  <li><font size=5>Bottom right panel shows the elevation profile for the {{ event }}; hills and
+	      elevation gain are associated with more difficulty.</font></li>
+	  <li><font size=5>The GPS feature plot compares the elevation gain/loss for the {{event}}
+	      to the averages for all courses of this race type.</font></li>
+	</ul>
 	<div class="starter-template">
 	  <a href="/index" class="btn btn-info btn-lg">
-            <span class="glyphicon glyphicon-home"></span> Home
-          </a>
+	    <span class="glyphicon glyphicon-home"></span> Home
+	  </a>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
@@ -170,12 +201,12 @@
       <!-- Footer -->
       <footer>
 	<div class="container">
-          <div class="row">
-            <div class="col-md-12">
+	  <div class="row">
+	    <div class="col-md-12">
               <p>Copyright &copy; LetsDoThis 2019</p>
-            </div>
-          </div>
-          <!-- /.row -->
+	    </div>
+	  </div>
+	  <!-- /.row -->
 	</div>
 	<!-- /.container -->
       </footer>
