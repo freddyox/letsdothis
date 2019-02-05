@@ -162,11 +162,17 @@ def build_plot(beta, gpx, race_type, meeting_id):
     name     = 'app/static/images/plots/features_{}.png'.format(str(rndstring))
     plt.savefig(name)
 
-    sum_up   = gpx[0]
+    # This is VERY TRICKY, sum_up has been normalized by distance BUT the difference
+    # feature has not. This is the correct way to handle this.
+    Dist = float(conversion[race_type])
+    sum_up   = gpx[0]*Dist
+    sum_up_a = get_avg("sum_up",race_type)*Dist
     diff     = gpx[2]
-    sum_down = abs(sum_up - diff)
-    sum_up_a = get_avg("sum_up",race_type)
-    sum_down_a = abs(sum_up_a - get_avg("diff",race_type))
+    diff_a   = get_avg("diff",race_type)
+    sum_down = sum_up - diff
+    sum_down_a = sum_up_a - diff_a
+    #print(sum_up, sum_up_a, diff, diff_a, sum_down, sum_down_a, 'TESTING')
+    
     # Part 2
     labels = ['Elev \n Gain', 'Avg Elev \n Gain', 'Elev \n Loss', 'Avg Elev\n Loss']
     values = [sum_up, sum_up_a, sum_down, sum_down_a]
@@ -175,7 +181,7 @@ def build_plot(beta, gpx, race_type, meeting_id):
     ax22.barh(labels, values, align='center', color=palette3, height=1.0)
     ax22.set_yticklabels(labels)
     ax22.invert_yaxis()  # labels read top-to-bottom
-    ax22.set_xlabel('Elevation gain/loss normalized by race distance (m/mi)')
+    ax22.set_xlabel('Elevation gain/loss (m)')
     plt.title("GPS Features")
     name_gpx = 'app/static/images/plots/gpx_{}.png'.format(str(rndstring))
     plt.grid()
@@ -291,7 +297,7 @@ def get_avg(column_name, race_type):
                 'diff'    : record[0][3],
                 'dt'      : record[0][4]}
     if column_name in rec_dict:
-        return rec_dict[column_name]
+        return float(rec_dict[column_name])
     else:
         return 0.0
 
