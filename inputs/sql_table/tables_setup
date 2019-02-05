@@ -6,3 +6,6 @@ SELECT* FROM race_info;
 
 log in terminal with:
 mysql --user=freddy -p
+
+CREATE TABLE gpx (meeting_id INT NOT NULL, bin INT NOT NULL, elevation FLOAT NOT NULL);
+LOAD DATA LOCAL INFILE '/home/freddy/insight/letsdothis/all_elevations.csv' INTO TABLE gpx FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';

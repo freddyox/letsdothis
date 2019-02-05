@@ -104,21 +104,22 @@
         <div class="form-group">
 	  <br>
 	  <h3>Difficulty Index: {{ '%0.1f'|format(score*10.0|float) }} </h3>
-	  <h3>Course: {{ event }} </h3> 
+	  <h3>Course: {{ event }} </h3>
 	  <br>
-	</div>
-	
+	</div>	
       </form>
+
+      <img src="{{ name }}" alt="" width="80%" height="100%">
+      
       <div class="starter-template_v2">
 	<h2>What Happened?</h2>
         <div class="form-group">
 	</div>
-	<p><font size=5>You chose to calculate the difficulty for the {{ args[2] }}
-	    referred to as {{ args[3] }}, and you supplied us with an input of
-	    age = {{args[0]}} and gender = {{args[1]}}. In addition to GPS information
+	<p><font size=5>You chose to calculate the difficulty for the {{ args[3] }} for a
+	    {{args[1]}} in the age bracket {{args[0]}}. In addition to GPS information
 	    about the course, these features are used in the difficulty calculation, and
-	    either positively or negatively affect the score in the following manner:
-	    <table style="width:100%">
+	    either positively or negatively affect the score in the following manner:</font>
+	    <table style="width:100%", 'font-size:100%'>
 	      <tr>
 		<th>Feature</th>
 		<th>Numerical Value</th>
@@ -155,20 +156,12 @@
 		<th>Difference in the elevation gain and loss divided by distance (m/mi).</th>
 	      </tr>
 	    </table>
-	</font></p>
+	</p>
 	<div class="starter-template">
 	  <a href="/index" class="btn btn-info btn-lg">
             <span class="glyphicon glyphicon-home"></span> Home
           </a>
 	</div>
-
-	<!--	<td>Age</td>
-		<td>Gender</td>
-	<td>Median Finish Time (min)</td>
-	<td>Elevation Increase (m/mi)</td>
-	<td>Std Dev in the Course (m/mi)</td>
-	<td>Elevation Difference (m/mi)</td>-->
-
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
       </div>

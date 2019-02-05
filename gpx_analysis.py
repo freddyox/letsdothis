@@ -7,6 +7,8 @@ import os.path
 import csv
 import math
 
+FGLOBAL = open("all_elevations.csv", "w")
+
 ##################################################
 # Some book-keeping
 #
@@ -27,7 +29,7 @@ def cut_up_url(url):
     substr = url[start:end]
     return int(substr)
 
-def get_gpx_info(filename):
+def get_gpx_info(filename, meeting_id):
     name = dir+ext+filename
     elev = []
     try:
@@ -56,7 +58,10 @@ def get_gpx_info(filename):
 
     # Let's find the Standard Deviation
     sum2=0.0
+    bin=0
     for i in elev:
+        FGLOBAL.write('%d,%d,%1.3f\n' % (meeting_id,bin,i) )
+        bin += 1
         sum2 += (i - mean_elevation)**2
 
     sum2norm = sum2 / len(elev) # variance
@@ -65,7 +70,7 @@ def get_gpx_info(filename):
     return features
 
 ################################################################################
-gpx_info = dir + 'gpx_discover.csv'
+gpx_info = dir + 'gpx_discover_new.csv'
 df = pd.read_csv(gpx_info)
 cols = list(df.columns)
 ID, UP, DOWN, MEAN, SIGMA = [], [], [], [], []
@@ -80,7 +85,7 @@ for index, row in df.iterrows():
     event = row[cols[1]]
     race  = str(row[cols[2]])
     gpx   = row[cols[3]]
-    features = get_gpx_info(gpx)
+    features = get_gpx_info(gpx, meeting_id)
     if len(features)<2: # Filtering the garbage results
         continue
     ID.append(meeting_id)

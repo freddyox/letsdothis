@@ -2,7 +2,13 @@ from flask import render_template, url_for, request, Flask
 from app import app
 import pandas as pd
 from flaskext.mysql import MySQL
-import operator
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+plt.switch_backend('agg')
+import numpy as np
+import operator # sorting dictionary
+import random
+import string
 
 mysql = MySQL()
 app.config['MYSQL_DATABASE_USER'] = 'freddy'
@@ -11,8 +17,13 @@ app.config['MYSQL_DATABASE_DB'] = 'app'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
-cur =conn.cursor()
-    
+cur  = conn.cursor()
+
+conversion={'Mar': 26.219,
+            '10K': 6.214
+}
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -72,8 +83,6 @@ def output():
       
     beta     = get_beta(race_type)
     X = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
-
-    print('avg sigma=',get_avg('sigma', race_type))
     
     # Perform the dot product for our user:
     betax = 0.0
@@ -85,8 +94,70 @@ def output():
     print('Output:')
     print('betaX: {}'.format(betax))
     print('score: {}'.format(score))
-    return render_template("output.html", betax=betax, score=score, event=event, beta=beta, args=args)
-  
+
+    gpx = gpx_info
+    gpx.append(time)
+    name = build_plot(beta, gpx, race_type, ID)
+    return render_template("output.html", betax=betax, score=score,
+                           event=event, beta=beta, args=args, name=name)
+
+def build_plot(beta, gpx, race_type, meeting_id):
+    labels = ['Age', 'Sex', 'Time', 'Elevation', 'Elevation \n Std. Dev.', 'Elevation \n Difference']
+    xint = range(len(labels))
+
+    palette = []
+
+    for i in beta:
+        if i <= 0:
+            palette.append('#b7040e')
+        else:
+            palette.append('#07a64c')
+    
+    fig = plt.figure()
+    ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
+    ax1.bar(xint, beta, width=1.0, color=palette)
+    plt.ylabel('Importance', fontsize=12)
+    plt.title('Regression Feature Importance')
+    plt.xticks(xint, labels, rotation=0, wrap=True)
+    plt.tight_layout()
+
+    # Let's get the averages for the gpx list for comparision
+    flags = ['sum_up', 'sigma', 'diff', 'min_time']
+    averages = []
+    for i in flags:
+        avg = get_avg(str(i), str(race_type))
+        averages.append(avg)
+
+    palette2 = ['#ff7f0e','#1f77b4']
+    ax2 = plt.subplot2grid((2, 2), (1, 0), colspan=1)
+    xint, vals = range(2), [gpx[3],averages[3]]
+    min_val = min(gpx[3],averages[3])
+    max_val = max(gpx[3],averages[3])
+    ax2.bar(xint,vals, width=1.0, color=palette2)
+    ax2.set_ylim(0.85*min_val, 1.15*max_val)
+    plt.ylabel('Finish Time (min)', fontsize=10)
+    plt.xticks(xint, ['Time', 'Average \n Time'], rotation=0, wrap=True)
+
+    legend_elements = [Patch(facecolor=palette2[0], label='Course Median Time'),
+                       Patch(facecolor=palette2[1], label='{} Median Time'.format(race_type))]
+    ax2.legend(handles=legend_elements, loc='upper right', frameon=False)
+    
+    plt.tight_layout()
+
+    elevation_dict = get_elevation_dict(meeting_id, race_type)
+    bins, elevation = elevation_dict.keys(), elevation_dict.values()
+    ax3 = plt.subplot2grid((2, 2), (1, 1), colspan=1)
+    ax3.plot(bins, elevation)
+    plt.ylabel('Elevation (m)', fontsize=10)
+    plt.xlabel('Distance (mi)', fontsize=10)
+    plt.tight_layout()
+    
+    rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
+    name = 'app/static/images/plots/temp_{}.png'.format(str(rndstring))
+    plt.savefig(name)
+    return name[3:]
+
+    
 def sql_get_events(flag, unique=True):
     sql_select_query = """SELECT meeting_id, event_title FROM race_info WHERE race_type = %s ORDER BY event_title"""
 
@@ -199,3 +270,15 @@ def get_avg(column_name, race_type):
         return rec_dict[column_name]
     else:
         return 0.0
+
+def get_elevation_dict(meeting_id, race_type):
+    sql_select_query = """SELECT bin,elevation FROM gpx WHERE meeting_id = %s"""
+    input = [str(meeting_id)]
+    cur.execute(sql_select_query, input)
+    record = cur.fetchall()
+    data = {}
+    N = len(record)
+    for row in record:
+        xval = (row[0] / N) * conversion[str(race_type)]
+        data[xval] = row[1]
+    return data
