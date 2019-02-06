@@ -32,7 +32,7 @@ conversion={'Mar': 26.219,
 @app.route('/index')
 def index():
     # We only have 2 race types, let's just hard code this for now:
-    return render_template("index.html", events=events_sortMar, AllEvents=AllEvents)
+    return render_template("index.html", AllEvents=AllEvents)
 
 @app.route('/about')
 def about():
@@ -348,26 +348,25 @@ def get_elevation_dict(meeting_id, race_type):
     input = [str(meeting_id)]
     cur.execute(sql_select_query, input)
     record = cur.fetchall()
-    xval, yval = [],[]
+    xval, yval = [], []
     N = len(record)
-    dN = int(N * 0.01*N)
     bins = {}
     for row in record:
         bins[row[0]] = (row[0], row[1]) 
 
-    last = bins[len(bins)-1]
-    xmax =  (1.0 / float(N)) * (float(conversion[str(race_type)]) )
+    norm =  (1.0 / float(N)) * (float(conversion[str(race_type)]) )
     for key, val in bins.items():
-        if key%10 is 0:
-            xval.append( val[0] * xmax )
+        if key%10 is 0: # reduce the granularity of the arrays
+            xval.append( val[0] * norm )
             yval.append( val[1] )
-        
+            
     return [xval,yval]
 
-eventsMar = sql_get_events("Mar")
-events10 = sql_get_events("10K")
-events_sortMar = sorted(eventsMar.items(), key=operator.itemgetter(1))
-events_sort10 = sorted(events10.items(), key=operator.itemgetter(1))
+#eventsMar = 
+#events10 = 
+#events_sortMar = sorted(eventsMar.items(), key = lambda x : x[1])
+#events_sort10 = sorted(events10.items(), key=operator.itemgetter(1))
 AllEvents = {}
-AllEvents['10K'] = events10
-AllEvents['Mar'] = eventsMar
+AllEvents['10K'] = sql_get_events("10K")
+AllEvents['Mar'] = sql_get_events("Mar")
+

@@ -141,7 +141,7 @@
             </select>
 	  </tab2>
     	  <br><br>
-	    <label for="race"> <font size=3> Race: &nbsp;</font> </label>
+	    <label for="race"> <font size=3> Race: &nbsp; &nbsp;</font> </label>
     	    <tab2><select name="race" id="race">
 		<option></option>
               </select>
@@ -152,7 +152,8 @@
     	  <tab> <select name="event" id="event"></select>
 	  </tab> 
     	  <br><br><br><br>
-
+	  
+	  <!-- Handle the dynamic drop down menus, requires JS-->
 	  <script>
 	    "use strict";
 	    
@@ -173,6 +174,7 @@
 	    var events = allevents[race.val()];
 	    
 	    for (var i in events) {
+	    console.log(i);
 	    event.append($('<option/>', {'value': i, 'text': events[i]}));
 	    }
 	    });
