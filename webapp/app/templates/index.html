@@ -8,14 +8,9 @@
     <meta name="author"      content="Richard F Obrecht">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../static/css/custom.css" >
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-    <!-- Custom styles for this template -->
-    <!--link href="./starter-template.css" rel="stylesheet"> -->
     <link href="../static/css/starter-template.css" rel="stylesheet">
-
   </head>
 
   <body>
@@ -60,7 +55,6 @@
 
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
-	
 	<div class="item active">        
           <img src="/static/images/runners3.jpg">
           <div class="carousel-caption">
@@ -83,8 +77,7 @@
             <h2><b>LetsDoThis</b><br> <font size=5> Estimating the difficulty of a race </font></h2>
             <p></p>
           </div>      
-	</div>
-	
+	</div>	
       </div>
 
       <!-- Left and right controls -->
@@ -110,7 +103,6 @@
       tab7 { padding-left: 8em; }
       tab8 { padding-left: 9em; }
     </style>
-
     
     <div class="starter-template">
       <h3><b>Enter your information:</b></h3>
@@ -150,21 +142,42 @@
 	  </tab2>
     	  <br><br>
 	    <label for="race"> <font size=3> Race: &nbsp;</font> </label>
-    	    <tab1><select name="race">
-		<option value="10K">10K</option>
-		<option value="Mar" selected>Marathon</option>
+    	    <tab2><select name="race" id="race">
+		<option></option>
               </select>
-	    </tab1>
+	    </tab2>
     	    <br><br>
 
     	  <label for="event"> <font size=3> Event:  &nbsp;&nbsp;&nbsp;&nbsp;</font> </label>
-    	  <tab> <select name="event">
-    	      {% for key,val in events %}
-	      <option value={{ key }}>{{ val }}</option>
-	      {% endfor %}
-    	    </select>
+    	  <tab> <select name="event" id="event"></select>
 	  </tab> 
-    	  <br><br><br><br>	     
+    	  <br><br><br><br>
+
+	  <script>
+	    "use strict";
+	    
+	    var allevents = {{ AllEvents|tojson }};
+	    var form = $('form');
+	    var race = $('select#race');
+	    var event = $('select#event');
+	    for (var key in allevents) {
+	    if( !(key in race) ){
+	    race.append($('<option/>', {'value': key, 'text': key}));
+	    }
+	    }
+	 
+	    race.change(function(ev) {
+	    event.empty();
+	    event.append($('<option/>'));
+	    
+	    var events = allevents[race.val()];
+	    
+	    for (var i in events) {
+	    event.append($('<option/>', {'value': i, 'text': events[i]}));
+	    }
+	    });
+	  </script>
+	  
           <button type="enter" class="btn btn-info btn-lg"> Run</button>
 	</div>
       </form>
@@ -187,7 +200,6 @@
       </div>
       <!-- /.container -->
     </footer>
-
     
     <!-- Bootstrap core JavaScript
 	 ================================================== -->

@@ -22,18 +22,17 @@ mysql.init_app(app)
 conn = mysql.connect()
 cur  = conn.cursor()
 
-###########################
+########################################
 conversion={'Mar': 26.219,
-            '10K': 6.214
-}
+            '10K': 6.214}
 
+########################################
+# Flask
 @app.route('/')
 @app.route('/index')
 def index():
-    events = sql_get_events("Mar")
-    # Let's sort the events, which is nicer for the user
-    events_sort = sorted(events.items(), key=operator.itemgetter(1))
-    return render_template("index.html", events=events_sort)
+    # We only have 2 race types, let's just hard code this for now:
+    return render_template("index.html", events=events_sortMar, AllEvents=AllEvents)
 
 @app.route('/about')
 def about():
@@ -49,7 +48,6 @@ def output():
     age_map = {'U11':0,'U13':1,'U15':2,'U17':3,'U20':4,'U23':5,
                'SEN':6,'V35':7,'V40':8,'V45':9,'V50':10,'V55':11,
                'V60':12,'V65':13,'V70':14,'V75':15,'V80':16,'V85':17}
-
     age_type    = str(request.args.get('age'))
     gender_type = str(request.args.get('gender'))
     race_type   = str(request.args.get('race'))
@@ -58,6 +56,11 @@ def output():
     args.append(age_type)
     args.append(gender_type)
     args.append(race_type)
+    
+    if not race_type:
+        return render_template("value_error.html", events=events_sortMar, AllEvents=AllEvents)
+    if not event_type:
+        return render_template("value_error.html", events=events_sortMar, AllEvents=AllEvents)
 
     age_type    =  pd.Series(age_type)
     gender_type =  pd.Series(gender_type)
@@ -84,8 +87,8 @@ def output():
     print('\t sigma  = {}'.format(gpx_info[1]))
     print('\t diff   = {}'.format(gpx_info[2]))
       
-    beta     = get_beta(race_type)
-    X = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
+    beta = get_beta(race_type)
+    X    = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
     
     # Perform the dot product for our user:
     betax = 0.0
@@ -95,19 +98,49 @@ def output():
 
     score = get_score(float(betax), race_type)
     print('Output:')
-    print('betaX: {}'.format(betax))
-    print('score: {}'.format(score))
+    print('\tbetaX: {}'.format(betax))
+    print('\tscore: {}'.format(score))
 
     gpx = gpx_info
     gpx.append(time)
     name,name_gpx = build_plot(beta, gpx, race_type, ID)
+    name_score = build_S_curve(betax, score, race_type)
     return render_template("output.html", betax=betax, score=score,
-                           event=event, beta=beta, args=args, name=name, name_gpx=name_gpx)
+                           event=event, beta=beta, args=args,
+                           name=name, name_gpx=name_gpx,
+                           name_score=name_score)
+
+def build_S_curve(betax, score, race_type):
+    sql_select_query = """SELECT xval,yval FROM d_dist WHERE race_type = %s"""
+    cur.execute(sql_select_query, (str(race_type), ))
+    record = cur.fetchall()
+    xs, ys = [], []
+    for row in record:
+        xs.append(row[0])
+        ys.append(row[1])
+
+    fig = plt.figure()
+    ax = plt.subplot(111)
+    ax.set_xlim(min(xs),max(xs))
+    ax.set_ylim(0.0,1.0)
+    ax.plot(xs, ys, 'r', linewidth=4.0)
+    ax.plot([betax,betax],[0.0, score], c='black',linestyle='--')
+    ax.plot([betax,0.0],[score, score], c='black',linestyle='--')
+    plt.ylabel('Difficulty', fontsize=16)
+    plt.xlabel('Score Distribution', fontsize=16)
+
+    plt.tight_layout()
+    rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
+    name     = 'app/static/images/plots/scores_{}.png'.format(str(rndstring))
+    plt.savefig(name)
+    return name[3:]
+    
 ################################################################################
 # Other methods to help output
 #
 def build_plot(beta, gpx, race_type, meeting_id):
-    labels = ['Age', 'Sex', 'Time', 'Elevation', 'Elevation \n Std. Dev.', 'Elevation \n Difference']
+    labels = ['Age', 'Sex', 'Time', 'Elevation', 'Elevation \n Std. Dev.',
+              'Elevation \n Difference']
     xint = range(len(labels))
 
     palette = []
@@ -156,6 +189,9 @@ def build_plot(beta, gpx, race_type, meeting_id):
     ax3.plot(bins, elevation)
     plt.ylabel('Course Elevation (m)', fontsize=12)
     plt.xlabel('Distance (mi)', fontsize=10)
+    avg = sum(elevation)/len(elevation)
+    ax3.set_ylim(min(elevation) - 0.15*avg,
+                 max(elevation) + 0.15*avg)
     plt.tight_layout()
     
     rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
@@ -171,8 +207,8 @@ def build_plot(beta, gpx, race_type, meeting_id):
     diff_a   = get_avg("diff",race_type)
     sum_down = sum_up - diff
     sum_down_a = sum_up_a - diff_a
-    print(sum_up, sum_up_a, diff, diff_a, sum_down, sum_down_a, 'TESTING')
-    print(gpx[0], sum_up)
+    #print(sum_up, sum_up_a, diff, diff_a, sum_down, sum_down_a, 'TESTING')
+    #print(gpx[0], sum_up)
     
     # Part 2
     labels_nice = ['Elev \n Gain', 'Avg Elev \n Gain', 'Elev \n Loss', 'Avg Elev \n Loss']
@@ -270,6 +306,8 @@ def get_beta(race):
     return beta
     
 def get_score(betax, race_type):
+    # There probably is a fast query to do this but I couldn't get it right in ~5 minutes
+    # so I moved on...
     sql_select_query = """SELECT * FROM d_dist WHERE race_type = %s"""
     cur.execute(sql_select_query, (str(race_type), ))
     record = cur.fetchall()
@@ -313,7 +351,23 @@ def get_elevation_dict(meeting_id, race_type):
     xval, yval = [],[]
     N = len(record)
     dN = int(N * 0.01*N)
+    bins = {}
     for row in record:
-        xval.append( (row[0] / float(N)) * float(conversion[str(race_type)]) )
-        yval.append(row[1])
+        bins[row[0]] = (row[0], row[1]) 
+
+    last = bins[len(bins)-1]
+    xmax =  (1.0 / float(N)) * (float(conversion[str(race_type)]) )
+    for key, val in bins.items():
+        if key%10 is 0:
+            xval.append( val[0] * xmax )
+            yval.append( val[1] )
+        
     return [xval,yval]
+
+eventsMar = sql_get_events("Mar")
+events10 = sql_get_events("10K")
+events_sortMar = sorted(eventsMar.items(), key=operator.itemgetter(1))
+events_sort10 = sorted(events10.items(), key=operator.itemgetter(1))
+AllEvents = {}
+AllEvents['10K'] = events10
+AllEvents['Mar'] = eventsMar
