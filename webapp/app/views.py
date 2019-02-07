@@ -105,10 +105,13 @@ def output():
     gpx.append(time)
     name,name_gpx = build_plot(beta, gpx, race_type, ID)
     name_score = build_S_curve(betax, score, race_type)
+    name_diff = build_time_diff_plot(race_type,ID,age,sex)
+    
     return render_template("output.html", betax=betax, score=score,
                            event=event, beta=beta, args=args,
                            name=name, name_gpx=name_gpx,
-                           name_score=name_score)
+                           name_score=name_score,
+                           name_diff=name_diff)
 
 def build_S_curve(betax, score, race_type):
     sql_select_query = """SELECT xval,yval FROM d_dist WHERE race_type = %s"""
@@ -134,7 +137,43 @@ def build_S_curve(betax, score, race_type):
     name     = 'app/static/images/plots/scores_{}.png'.format(str(rndstring))
     plt.savefig(name)
     return name[3:]
+
+def build_time_diff_plot(race_type,ID,age,sex):
+    Score, Time = [],[]
+    ThisScore,ThisTime=[],[]
+    for key,val in AllEvents[race_type].items():
+        time     = get_time(key, val, True)
+        gpx_info = get_gpx_info(key, val, True)
+        beta     = get_beta(race_type)
+        X        = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
+        betax = 0.0
+        for idx, val in enumerate(X):
+            betax += X[idx]*beta[idx]
+        newscore = get_score(float(betax), race_type)
+        if key==ID:
+            ThisScore.append(newscore*10.0)
+            ThisTime.append(time)
+        else:
+            Score.append(newscore*10.0)
+            Time.append(time)
+        
+    fig = plt.figure()
+    ax = plt.subplot(111)
+    plt.grid()
     
+    plt.scatter(Time,Score,c='black',s=30,marker='o',label='All Scores')
+    plt.scatter(ThisTime,ThisScore,c='red',s=40,marker='^',label='This Race')
+    
+    ax.set_ylim(0.0,10.0)
+    avg = sum(Time)/len(Time)
+    ax.set_xlim(min(Time)-0.1*avg,max(Time)+0.1*avg)
+    plt.xlabel('Average Finish Time (min)',fontsize=12)
+    plt.ylabel('Difficulty Score',fontsize=12)
+    plt.tight_layout()
+    rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
+    name     = 'app/static/images/plots/time_score_{}.png'.format(str(rndstring))
+    plt.savefig(name)
+    return name[3:]
 ################################################################################
 # Other methods to help output
 #
@@ -281,7 +320,7 @@ def get_gpx_info(ID, event, use_event=True):
         
     cur.execute(sql_select_query, (str(flag), ))
     record = cur.fetchall()
-    print(record)
+    
     results = [0.0, 0.0, 0.0]
     for row in record:
         results[0] += row[1]
