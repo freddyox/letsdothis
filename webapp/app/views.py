@@ -120,16 +120,17 @@ def build_S_curve(betax, score, race_type):
     xs, ys = [], []
     for row in record:
         xs.append(row[0])
-        ys.append(row[1])
+        ys.append(row[1]*10.0)
 
     fig = plt.figure()
     ax = plt.subplot(111)
     ax.set_xlim(min(xs),max(xs))
-    ax.set_ylim(0.0,1.0)
+    ax.set_ylim(0.0,10.0)
     ax.plot(xs, ys, 'r', linewidth=4.0)
+    score = 10.0*score
     ax.plot([betax,betax],[0.0, score], c='black',linestyle='--')
     ax.plot([betax,0.0],[score, score], c='black',linestyle='--')
-    plt.ylabel('Difficulty', fontsize=16)
+    plt.ylabel('Relative Difficulty', fontsize=16)
     plt.xlabel('Score Distribution', fontsize=16)
 
     plt.tight_layout()
@@ -167,8 +168,8 @@ def build_time_diff_plot(race_type,ID,age,sex):
     ax.set_ylim(0.0,10.0)
     avg = sum(Time)/len(Time)
     ax.set_xlim(min(Time)-0.1*avg,max(Time)+0.1*avg)
-    plt.xlabel('Average Finish Time (min)',fontsize=12)
-    plt.ylabel('Difficulty Score',fontsize=12)
+    plt.xlabel('Average Finish Time (min)',fontsize=15)
+    plt.ylabel('Relative Difficulty',fontsize=15)
     plt.tight_layout()
     rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     name     = 'app/static/images/plots/time_score_{}.png'.format(str(rndstring))
