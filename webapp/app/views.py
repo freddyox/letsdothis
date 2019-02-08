@@ -72,20 +72,20 @@ def output():
     event    = get_event(ID)
     args.append(event)
     
-    print('User Input:')
-    print('\t age   = {}'.format(age))
-    print('\t sex   = {}'.format(sex))
-    print('\t race  = {}'.format(race_type))
-    print('\t ID    = {}'.format(ID))
-    print('\t Event = {}'.format(event))
+    #print('User Input:')
+    #print('\t age   = {}'.format(age))
+    #print('\t sex   = {}'.format(sex))
+    #print('\t race  = {}'.format(race_type))
+    #print('\t ID    = {}'.format(ID))
+    #print('\t Event = {}'.format(event))
     
     time     = get_time(ID, event, True)
     gpx_info = get_gpx_info(ID, event, True)
-    print('Course Input:')
-    print('\t time   = {}'.format(time))
-    print('\t sum_up = {}'.format(gpx_info[0]))
-    print('\t sigma  = {}'.format(gpx_info[1]))
-    print('\t diff   = {}'.format(gpx_info[2]))
+    #print('Course Input:')
+    #print('\t time   = {}'.format(time))
+    #print('\t sum_up = {}'.format(gpx_info[0]))
+    #print('\t sigma  = {}'.format(gpx_info[1]))
+    #print('\t diff   = {}'.format(gpx_info[2]))
       
     beta = get_beta(race_type)
     X    = [age, sex, time, gpx_info[0], gpx_info[1],gpx_info[2]]
@@ -94,12 +94,12 @@ def output():
     betax = 0.0
     for idx, val in enumerate(X):
         betax += X[idx]*beta[idx]
-        print(idx, X[idx], beta[idx])
+        #print(idx, X[idx], beta[idx])
 
     score = get_score(float(betax), race_type)
-    print('Output:')
-    print('\tbetaX: {}'.format(betax))
-    print('\tscore: {}'.format(score))
+    #print('Output:')
+    #print('\tbetaX: {}'.format(betax))
+    #print('\tscore: {}'.format(score))
 
     gpx = gpx_info
     gpx.append(time)
@@ -302,8 +302,8 @@ def get_time(ID, event, use_event=True):
     cur.execute(sql_select_query, (str(flag), ))
     record = cur.fetchall()
 
-    if len(record) > 1:
-        print('{} has {} records => averaging times'.format(event,len(record)))
+    #if len(record) > 1:
+        #print('{} has {} records => averaging times'.format(event,len(record)))
     time_avg = 0.0
     for row in record:
         time_avg += row[1]
@@ -331,7 +331,7 @@ def get_gpx_info(ID, event, use_event=True):
     results[0] /= N
     results[1] /= N
     results[2] /= N
-    print('Found {0} records for {1}'.format(N, event))
+    #print('Found {0} records for {1}'.format(N, event))
     return results
      
 def get_beta(race):
