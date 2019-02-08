@@ -92,27 +92,40 @@
 	<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
 	<span class="sr-only">Next</span>
       </a>
-    </div> <!--end of carousel > --> 
+    </div> <!--end of carousel > -->
+
+    <!--TABLE > -->
+    <style>
+      #food {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse; width: 100%; margin-left: auto; margin-right: auto; }
+      #food td, #food th { border: 3px solid #ddd; padding: 8px; font-size: 20px;}
+      #food tr:nth-child(even){background-color: #f2f2f2;}
+      #food tr:hover {background-color: #ddd;}
+      #food th { padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #ffffff; color: black; }
+    </style> 
+    
     
     <div class="starter-template">
       <div class="form-group">
 	<br>
-	<h1><b>Relative Difficulty: {{ '%0.1f'|format(score*10.0|float) }} out of 10.0 </b></h1>
-	<h1><b>Course: {{ event }} </b></h1><br>
+	<h1><b>{{ event }}</b></h1><br>
+	<h2><b>Relative Difficulty: {{ '%0.1f'|format(score*10.0|float) }} out of 10.0</b></h2>
+	<h2>&nbsp;<b>Course Difficulty: {{ '%0.1f'|format(course_score*10.0|float) }} out of 10.0</b></h2><br><br>
 	<a href="/index" class="btn btn-info btn-lg">
 	  <span class="glyphicon glyphicon-home"></span> Back
 	</a>
       </div><br>
       <figure>
 	<img src="{{ name }}" alt="" width="55%" height="50%">
-	<figcaption><font size=5><b>Top Panel:</b> The feature importance of the regularized
+	<figcaption><font size=5><b>Figure 1 - </b> <i>Top Panel:</i> The feature importance of the regularized
 	    linear regression model where <font color="green">green</font>
 	    (<font color="red">red</font>) affects race finish times in the
 	    <font color="green">+</font> (<font color="red">-</font>) direction, which
 	    outputs a <font color="green">less</font> (<font color="red">more</font>) difficult course. 
-	    <b>Bottom Left:</b> Comparing the course median finish time to the average of all courses; larger
+	    <i>Bottom Left:</i> Comparing the course median finish time to the average of all courses; larger
 	    course times generally are associated with a more difficult course.
-	    <b>Bottom Right:</b> The course elevation profile where more elevation gain leads to higher difficulty
+	    <i>Bottom Right:</i> The course elevation profile where more elevation gain leads to higher difficulty
 	    scores.
 	</font></figcaption>
       </figure>
@@ -121,7 +134,7 @@
 
       <figure>
 	<img src="{{ name_gpx }}" alt="" width="50%" height="75%">
-	<figcaption><font size=5>Features extracted from GPS information, specifically the elevation
+	<figcaption><font size=5><b>Figure 2 - </b>Features extracted from GPS information, specifically the elevation
 	    gain and loss which has been normalized by the race distance. For comparison, the elevation
 	    features are compared to the average of all courses. Typically, a race with a positive
 	    (gain - loss) value tends to be more difficult, and vice versa. 
@@ -132,71 +145,75 @@
       
       <div class="starter-template_v2">
 	<h2><b><font size=7>What Happened in words...</font></b></h2>
-	<div class="form-group">
-	</div>
 	<ul>
+	  <li><p><font size=5> <b>Relative difficulty</b> includes your attributes while <b>course difficulty</b> is the result
+		of taking an average across the sex/age bands, effectively removing the personal attributes from the calculation. 
+	    </font></p>
 	  <li><p><font size=5>You chose to calculate the difficulty for the {{ args[3] }} for a
 		{{args[1]}} in the age bracket {{args[0]}}. In addition to GPS information
-		about the course, these features are used in the difficulty calculation, and
-		either positively or negatively affect the score in the following manner (summarized
-		by the top panel in the Figure):</font></p>
-	    <table style="width:100%", 'font-size:100%'>
-	      <tr>
-		<th>Feature</th>
-		<th>Numerical Value</th>
-		<th>Description</th>
-	      </tr>
-	      <tr>
-		<th>Age</th>
-		<th> {{ '%0.3f'|format(beta[0]|float) }}</th>
-		<th>Age is a categorical variable ranging from 0-17.</th>
-	      </tr>
-	      <tr>
-		<th>Sex</th>
-		<th> {{ '%0.3f'|format(beta[1]|float) }}</th>
-		<th>Sex is a categorical variable ranging from 1-2.</th>
-	      </tr>
-	      <tr>
-		<th>Time</th>
-		<th> {{ '%0.3f'|format(beta[2]|float) }}</th>
-		<th>Median finish time for this race (min).</th>
-	      </tr>
-	      <tr>
-		<th>Elevation Gain</th>
-		<th> {{ '%0.3f'|format(beta[3]|float) }}</th>
-		<th>Elevation gain normalized by the race distance (m/mi).</th>
-	      </tr>
-	      <tr>
-		<th>Std. Dev.</th>
-		<th> {{ '%0.3f'|format(beta[4]|float) }}</th>
-		<th>Std dev. in the elevation mean divided by distance (m/mi).</th>
-	      </tr>
-	      <tr>
-		<th>Elevation Difference</th>
-		<th> {{ '%0.3f'|format(beta[5]|float) }}</th>
-		<th>Difference in the elevation gain and loss divided by distance (m/mi).</th>
-	      </tr>
-	    </table>
+		about the course, these features are used in the relative difficulty calculation, and
+		either positively or negatively affect the score in the following manner (pictorially summarized
+		by the top panel in Figure 1):</font></p><br>
+	    <div id="food">
+	      <table style="width:100%">
+		<tr>
+		  <th>Feature</th>
+		  <th>Importance</th>
+		  <th>Description</th>
+		</tr>
+		<tr>
+		  <th>Age</th>
+		  <th> {{ '%0.3f'|format(beta[0]|float) }}</th>
+		  <th>Age is a categorical variable ranging from 0-17.</th>
+		</tr>
+		<tr>
+		  <th>Sex</th>
+		  <th> {{ '%0.3f'|format(beta[1]|float) }}</th>
+		  <th>Sex is a categorical variable, either 1 (Female) or 2 (Male).</th>
+		</tr>
+		<tr>
+		  <th>Time</th>
+		  <th> {{ '%0.3f'|format(beta[2]|float) }}</th>
+		  <th>Median finish time for this race.</th>
+		</tr>
+		<tr>
+		  <th>Elevation Gain</th>
+		  <th> {{ '%0.3f'|format(beta[3]|float) }}</th>
+		  <th>Elevation gain normalized by the race distance (m/mi).</th>
+		</tr>
+		<tr>
+		  <th>Hilliness</th>
+		  <th> {{ '%0.3f'|format(beta[4]|float) }}</th>
+		  <th>Standard deviation in the elevation mean divided by distance (m/mi).</th>
+		</tr>
+		<tr>
+		  <th>Elevation Difference</th>
+		  <th> {{ '%0.3f'|format(beta[5]|float) }}</th>
+		  <th>Difference in the elevation gain and loss divided by distance (m/mi).</th>
+		</tr>
+	      </table>
+	      <div><br>
 	  </li><br>
-	  <li><font size=5>The output of the regularized linear regression model (the numerical values
-	      above) in addition to your features are used to calculate a course score from which a difficulty
-	      metric is extracted, e.g. see below for the difficulty vs. score S-curve
+	  <li><font size=5>The output of the regularized linear regression model (Importance in the table)
+	      in addition to your features are used to calculate a course score from which a difficulty
+	      metric is extracted, e.g. see below for the relative difficulty vs. score S-curve
 	      (technically a cumulative distribution function):</font></li><br>
 	</ul>
+
 	<div class="starter-template">
-	<figure>
+	  <figure>
 	    <img src="{{ name_score }}" alt="" width="65%" height="50%">
-	    <figcaption><font size=5>The S-curve, which was generated using the regression results
+	    <figcaption><font size=5><b>Figure 3 - </b>The S-curve, which was generated using the regression results
 		in addition to runner information, provides a method to extract a difficulty metric.
 		The dotted line represents your score for the {{event}}.
 	    </font></figcaption>
-	</figure><br><br>
-	<figure>
-	  <img src="{{ name_diff }}" alt="" width="65%" height="50%">
-	  <figcaption><font size=5>Displaying how the {{event}} compares to other races of
-	      this distance.
-	  </font></figcaption>
-	</figure>
+	  </figure><br><br>
+	  <figure>
+	    <img src="{{ name_diff }}" alt="" width="65%" height="50%">
+	    <figcaption><font size=5><b>Figure 4 - </b>Displaying how the {{event}} compares to other races of
+		this distance.
+	    </font></figcaption>
+	  </figure>
 	</div>
 	<div class="starter-template">
 	  <a href="/index" class="btn btn-info btn-lg">
@@ -205,32 +222,32 @@
 	</div>
 	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 	<script src="../static/js/bootstrap.min.js"></script>
-      </div>
-
-      <br>
-      <!-- Footer -->
-      <footer>
-	<div class="container">
-	  <div class="row">
-	    <div class="col-md-12">
-              <p>Copyright &copy; LetsDoThis 2019</p>
-	    </div>
-	  </div>
-	  <!-- /.row -->
 	</div>
-	<!-- /.container -->
-      </footer>
+
+	<br>
+	<!-- Footer -->
+	<footer>
+	  <div class="container">
+	    <div class="row">
+	      <div class="col-md-12">
+		<p>Copyright &copy; LetsDoThis 2019</p>
+	      </div>
+	    </div>
+	    <!-- /.row -->
+	  </div>
+	  <!-- /.container -->
+	</footer>
 
 
 
-      <!-- Bootstrap core JavaScript
-	   ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-      <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
-	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-	<!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
-	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	<!-- Bootstrap core JavaScript
+	     ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+	  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	  <!-- <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script> -->
+	  <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
   </body>
 </html>
 

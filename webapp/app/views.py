@@ -58,9 +58,9 @@ def output():
     args.append(race_type)
     
     if not race_type:
-        return render_template("value_error.html", events=events_sortMar, AllEvents=AllEvents)
+        return render_template("value_error.html", AllEvents=AllEvents)
     if not event_type:
-        return render_template("value_error.html", events=events_sortMar, AllEvents=AllEvents)
+        return render_template("value_error.html", AllEvents=AllEvents)
 
     age_type    =  pd.Series(age_type)
     gender_type =  pd.Series(gender_type)
@@ -81,6 +81,9 @@ def output():
     
     time     = get_time(ID, event, True)
     gpx_info = get_gpx_info(ID, event, True)
+    gpx = gpx_info
+    gpx.append(time)
+    
     #print('Course Input:')
     #print('\t time   = {}'.format(time))
     #print('\t sum_up = {}'.format(gpx_info[0]))
@@ -96,23 +99,41 @@ def output():
         betax += X[idx]*beta[idx]
         #print(idx, X[idx], beta[idx])
 
+    # Relative Difficulty
     score = get_score(float(betax), race_type)
-    #print('Output:')
-    #print('\tbetaX: {}'.format(betax))
-    #print('\tscore: {}'.format(score))
+    # Course Difficulty
+    course_score = get_course_difficulty(beta, gpx, race_type)
+    #print('Rel, Course Difficulty', score, course_score)
 
-    gpx = gpx_info
-    gpx.append(time)
+    # Plots for the output
     name,name_gpx = build_plot(beta, gpx, race_type, ID)
     name_score = build_S_curve(betax, score, race_type)
     name_diff = build_time_diff_plot(race_type,ID,age,sex)
     
-    return render_template("output.html", betax=betax, score=score,
+    return render_template("output.html",
+                           betax=betax, score=score, course_score=course_score,
                            event=event, beta=beta, args=args,
-                           name=name, name_gpx=name_gpx,
+                           name=name,
+                           name_gpx=name_gpx,
                            name_score=name_score,
                            name_diff=name_diff)
 
+##################################################
+# Remove sex/age dependence, average the result
+def get_course_difficulty(beta, gpx, race_type):
+    scores = []
+    for age in range(0,18):     # 0 -> 17
+        for sex in range(1,3):  # 1 or 2, female or male
+            X = [age, sex, gpx[3], gpx[0], gpx[1], gpx[2]]
+            betax = 0.0
+            for idx in range(len(X)):
+                betax += X[idx] * beta[idx]
+            score = get_score(float(betax), race_type)
+            scores.append(score)
+    average = sum(scores) / len(scores)
+    return average
+##################################################
+# Build PLOTS
 def build_S_curve(betax, score, race_type):
     sql_select_query = """SELECT xval,yval FROM d_dist WHERE race_type = %s"""
     cur.execute(sql_select_query, (str(race_type), ))
@@ -267,7 +288,13 @@ def build_plot(beta, gpx, race_type, meeting_id):
     plt.grid()
     plt.savefig(name_gpx)
     return [name[3:], name_gpx[3:]]
-   
+##################################################
+# Done PLOTTING
+##################################################
+
+##################################################
+# SQL TASKS
+#
 def sql_get_events(flag, unique=True):
     sql_select_query = """SELECT meeting_id, event_title FROM race_info WHERE race_type = %s ORDER BY event_title"""
 
@@ -402,10 +429,6 @@ def get_elevation_dict(meeting_id, race_type):
             
     return [xval,yval]
 
-#eventsMar = 
-#events10 = 
-#events_sortMar = sorted(eventsMar.items(), key = lambda x : x[1])
-#events_sort10 = sorted(events10.items(), key=operator.itemgetter(1))
 AllEvents = {}
 AllEvents['10K'] = sql_get_events("10K")
 AllEvents['Mar'] = sql_get_events("Mar")
