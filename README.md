@@ -1,5 +1,5 @@
 # LetsDoThis
-All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program. </a> in New York City. In the interest of memory, the scraped and cleaned data will not been uploaded.
+All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. In the interest of memory, the scraped and cleaned data will not been uploaded.
 
 ### Data Scraping and Cleaning
 Extensive scraping has been performed from two data sources:
@@ -8,5 +8,11 @@ Extensive scraping has been performed from two data sources:
 
 Data merging and cleaning was performed using stand-alone python scripts and jupyter notebooks. I limited the analysis to **road** races, which means I excluded trail/multi terrain races. Post cleaning results in about 60 MB (350 MB) of GPS (finish time) data.
 
+### Definition of Difficulty 
+working on this...
+
 ### Difficulty Analysis 
 * I focused on 10K and Marathon races due to GPS data concerns; scraping more GPS information was too time-intensive for the 3-4 week schedule at Insight, but the analysis in principle extends to any race type.
+* Exclude walkers with a sensible cut on their finish time, e.g. if I know the course distance and make the assumption that walkers have a speed of 3-4 mph, then this may be done.
+
+working on this...
