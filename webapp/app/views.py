@@ -158,6 +158,7 @@ def build_S_curve(betax, score, race_type):
     rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     name     = 'app/static/images/plots/scores_{}.png'.format(str(rndstring))
     plt.savefig(name)
+    plt.close(fig);
     return name[3:]
 
 def build_time_diff_plot(race_type,ID,age,sex):
@@ -195,6 +196,7 @@ def build_time_diff_plot(race_type,ID,age,sex):
     rndstring = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     name     = 'app/static/images/plots/time_score_{}.png'.format(str(rndstring))
     plt.savefig(name)
+    plt.close(fig);
     return name[3:]
 ################################################################################
 # Other methods to help output
@@ -287,6 +289,8 @@ def build_plot(beta, gpx, race_type, meeting_id):
     name_gpx = 'app/static/images/plots/gpx_{}.png'.format(str(rndstring))
     plt.grid()
     plt.savefig(name_gpx)
+    plt.close(fig);
+    plt.close(fig2);
     return [name[3:], name_gpx[3:]]
 ##################################################
 # Done PLOTTING
