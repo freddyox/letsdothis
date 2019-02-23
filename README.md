@@ -9,7 +9,9 @@ Extensive scraping has been performed from two data sources:
 Data merging and cleaning was performed using stand-alone python scripts and jupyter notebooks. I limited the analysis to **road** races, which means I excluded trail/multi terrain races. Post cleaning results in about 60 MB (350 MB) of GPS (finish time) data.
 
 ### Definition of Difficulty 
-working on this...
+A course difficulty is not directly measureable and consequently a proxy, such as time, must be used. In this case, features that result in longer finish times on average are assumed to be associated with a more difficult course, and vice versa. For example, a course with a large elevation gain should result in longer finish times on average; therefore, large elevation gains are associated with a more difficult course.
+
+A **relative difficulty score** incorporates age/sex into the calculation, and a **course difficulty** score is the result of averaging the relative difficulty score across all age/sex bands. In other words, a 30 year old male on average will run faster than an 85 year old man, and this is reflected in the relative difficulty score. What is interesting, though, is that age/sex time differences (and hence relative difficulty differences) become less pronounced as the race distance increases, e.g. the relative difficulty score often is the same as the course difficulty score for marathons. 
 
 ### Difficulty Analysis 
 * I focused on 10K and Marathon races due to GPS data concerns; scraping more GPS information was too time-intensive for the 3-4 week schedule at Insight, but the analysis in principle extends to any race type.
