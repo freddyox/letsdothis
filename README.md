@@ -1,5 +1,5 @@
 # LetsDoThis
-All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. In the interest of memory, the scraped and cleaned data will not been uploaded.
+All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. In the interest of memory, the scraped and cleaned data will not been uploaded. The web application, which utilizes python, javascript, Flask, AWS, and SQL, may be seen <a href="http://racedifficultyindex.com/">here</a>; note that the link will eventually die once I stop paying for it, and the site has not been optimized for mobile access.
 
 ### Data Scraping and Cleaning
 Extensive scraping has been performed from two data sources:
