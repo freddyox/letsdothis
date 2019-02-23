@@ -8,7 +8,7 @@ Extensive scraping has been performed from two data sources:
 
 Data merging and cleaning was performed using stand-alone python scripts and jupyter notebooks. I limited the analysis to **road** races, which means I excluded trail/multi terrain races. Post cleaning results in about 60 MB (350 MB) of GPS (finish time) data.
 
-*Note that in the interest of space, the scraped and cleaned data will not been uploaded to GitHub.*
+*Note that in the interest of space, the scraped and cleaned data will not be uploaded to GitHub.*
 
 ### Definition of Difficulty 
 A course difficulty is not directly measurable and consequently a proxy, such as time, must be used. In this case, features that result in longer finish times on average are assumed to be associated with a more difficult course, and vice versa. For example, a course with a large elevation gain should result in longer finish times on average; therefore, large elevation gains are associated with a more difficult course.
