@@ -17,6 +17,8 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 * I focused on 10K and Marathon races due to GPS data concerns; scraping more GPS information was too time-intensive for the 3-4 week schedule at Insight, but the analysis in principle extends to any race type.
 * Exclude walkers with a sensible cut on their finish time, e.g. if I know the course distance and make the assumption that walkers have a speed of 3-4 mph, then this may be done.
 * Used linear regression (also explored logistic regression in addition to regularized linear regression) where the target variable is the time difference between a runner's finish time and the average time for that particular course; the features are course elevation gain/loss, course hilliness (the standard deviation in the mean elevation), the course elevation difference, and a runner's finish time, age, and sex. 
-* The regression weights may be used to build a probability distribution, where fast (slow) runners show up on the left- (right-) hand side of the mean:
-![alt text](https://github.com/freddyox/letsdothis/tree/master/images/10k_dist.png)
+* The regression weights may be used to build a probability distribution, where fast (slow) runners show up on the left- (right-) hand side of the mean; note that there was a long asymmetric tail on the slow side due to walkers, which further justifies the removal of this group from the calculation.
 ![Screenshot](images/10k_dist.png)
+* The probability distribution may be integrated in a special way to achieve a cumulative distribution function (CDF), which allows one to map the weights * features to the range [0,1] which is interpretted as a difficulty score. Multiply the result by 10 in order to get a value that ranges from [0,10]:
+![Screenshot](images/CDF.png)
+
