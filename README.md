@@ -19,6 +19,6 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 * Used linear regression (also explored logistic regression in addition to regularized linear regression) where the target variable is the time difference between a runner's finish time and the average time for that particular course; the features are course elevation gain/loss, course hilliness (the standard deviation in the mean elevation), the course elevation difference, and a runner's finish time, age, and sex. 
 * The regression weights may be used to build a probability distribution, where fast (slow) runners show up on the left- (right-) hand side of the mean:
 <figure>
-  <img src="/images/10k_dist.png" alt="" height="50%" width="50%">
-  <figcaption>Fig. 1 - .</figcaption>
+  <img src="/images/10k_dist.png" align="center" alt="" height="50%" width="50%">
+  <figcaption>Fig. 1 - The probability distribution for 10K races; the distributions looks similar in shape for marathons. Note that the slow-slide has an asymmetric tail which is due to walkers, which is the primary reason for excluding this group from the calculation.</figcaption>
 </figure>
