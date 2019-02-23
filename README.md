@@ -23,3 +23,5 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 ![Screenshot](images/CDF.png)<p></p>
 * The Edinburgh Marathon course begins on a hill, and then drops by roughly 40 meters in less than 3 miles; the remainder of the course is quite flat which is indicative of an easy marathon. Consequently, runners on average finish the race in a shorter amount of time (note that the median time is very close to the average post timing cuts):<p></p>
 ![Screenshot](images/edinburgh.png)<p></p>
+* I built a probability distribution and CDF for each race type (10K and marathon); this only needs to be done once. In order to avoid unnecessary computations, I put the results in a SQL table. Input from the user in addition to course information (elevation gain/loss, and hilliness) are then used to calculate a score, and then the SQL tables are queried.
+* The web application outputs a variety of graphs so the user can see how the chosen event compares to the average, which allows the user to make an informed decision about choosing their next racing challenge. 
