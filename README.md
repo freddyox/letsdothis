@@ -17,8 +17,8 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 * I focused on 10K and Marathon races due to GPS data concerns; scraping more GPS information was too time-intensive for the 3-4 week schedule at Insight, but the analysis in principle extends to any race type.
 * Exclude walkers with a sensible cut on their finish time, e.g. if I know the course distance and make the assumption that walkers have a speed of 3-4 mph, then this may be done.
 * Used linear regression (also explored logistic regression in addition to regularized linear regression) where the target variable is the time difference between a runner's finish time and the average time for that particular course; the features are course elevation gain/loss, course hilliness (the standard deviation in the mean elevation), the course elevation difference, and a runner's finish time, age, and sex. 
-
+* The regression weights may be used to build a probability distribution, where fast (slow) runners show up on the left- (right-) hand side of the mean:
 <figure>
-  <img src="/images/10K_dist.png" alt="" height="100%" width="100%">
+  <img src="/images/10k_dist.png" alt="" height="50%" width="50%">
   <figcaption>Fig. 1 - .</figcaption>
 </figure>
