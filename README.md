@@ -1,5 +1,5 @@
 # LetsDoThis
-All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. In the interest of memory, the scraped and cleaned data will not been uploaded. The web application, which utilizes python, javascript, Flask, AWS, and SQL, may be seen <a href="http://racedifficultyindex.com/">here</a>; note that the link will eventually die once I stop paying for it, and the site has not been optimized for mobile access.
+All marathons are the same distance; however, the courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. The web application final product, which utilizes Python, JavaScript, Flask, AWS, and SQL, may be seen <a href="http://racedifficultyindex.com/">here</a>; note that the link will eventually die once I stop paying for it, and the site has not been optimized for mobile access. In the interest of space, the scraped and cleaned data will not been uploaded.
 
 ### Data Scraping and Cleaning
 Extensive scraping has been performed from two data sources:
@@ -16,5 +16,9 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 ### Difficulty Analysis 
 * I focused on 10K and Marathon races due to GPS data concerns; scraping more GPS information was too time-intensive for the 3-4 week schedule at Insight, but the analysis in principle extends to any race type.
 * Exclude walkers with a sensible cut on their finish time, e.g. if I know the course distance and make the assumption that walkers have a speed of 3-4 mph, then this may be done.
+* Used linear regression (also explored logistic regression in addition to regularized linear regression) where the target variable is the time difference between a runner's finish time and the average time for that particular course; the features are course elevation gain/loss, course hilliness (the standard deviation in the mean elevation), the course elevation difference, and a runner's finish time, age, and sex. 
 
-working on this...
+<figure>
+  <img src="/images/10K_dist.png" alt="" height="100%" width="100%">
+  <figcaption>Fig. 1 - .</figcaption>
+</figure>
