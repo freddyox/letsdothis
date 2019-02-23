@@ -19,3 +19,4 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 * Used linear regression (also explored logistic regression in addition to regularized linear regression) where the target variable is the time difference between a runner's finish time and the average time for that particular course; the features are course elevation gain/loss, course hilliness (the standard deviation in the mean elevation), the course elevation difference, and a runner's finish time, age, and sex. 
 * The regression weights may be used to build a probability distribution, where fast (slow) runners show up on the left- (right-) hand side of the mean:
 ![alt text](https://github.com/freddyox/letsdothis/tree/master/images/10k_dist.png)
+![Screenshot](images/10k_dist.png)
