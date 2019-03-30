@@ -27,3 +27,7 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 ![Screenshot](images/edinburgh.png)<p></p>
 * I built a probability distribution and CDF for each race type (10K and marathon); this only needs to be done once. In order to avoid unnecessary computations, I put the results in a SQL table. Input from the user in addition to course information (elevation gain/loss, and hilliness) are then used to calculate a score, and then the SQL tables are queried.
 * The web application outputs a variety of graphs so the user can see how the chosen event compares to the average, which allows the user to make an informed decision about choosing their next racing challenge. 
+
+### Important Considerations
+* As the client is based out of the UK, I scoped the analysis down to races within the UK. 
+* Marathons **generally have qualifying times** and prizes; however, the races that I chose do not have ridiculously large prizes, e.g. first place in the Boston marathon is 150k. This brings in world-class talent, which effectively reduces the race time biasing the difficulty score to lower values. First place in the Edinburgh marathon is 1,000 pounds which is not nearly enough to bias the calculation like the Boston marathon. Therefore, if one wants to extend the model to handle the top races, then addition features need to be added, e.g. qualifying time and prize normalizations.
