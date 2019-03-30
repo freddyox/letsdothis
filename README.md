@@ -30,4 +30,5 @@ A **relative difficulty score** incorporates age/sex into the calculation, and a
 
 ### Important Considerations
 * As the client is based out of the UK, I scoped the analysis down to races within the UK. 
-* Marathons **generally have qualifying times and prizes**; however, the races that I chose do not have ridiculously large prizes, e.g. first place in the Boston marathon is 150k. This brings in world-class talent, which effectively reduces the race time biasing the difficulty score to lower values. First place in the Edinburgh marathon is 1,000 pounds which is not nearly enough to bias the calculation like the Boston marathon. Therefore, if one wants to extend the model to handle the top races, then addition features need to be added, e.g. qualifying time and prize normalizations.
+* Marathons **generally have qualifying times and prizes**.
+* The races that I chose do not have ridiculously large prizes, e.g. first place in the Edinburgh marathon is 1,000 pounds. On the other hand, first place in the Boston marathon is 150k; this brings in world-class talent, which effectively reduces the overall race time biasing the difficulty score to lower values. Therefore, if one wants to extend the model to handle the top races, then additional features need to be added, e.g. qualifying time and prize normalizations.
