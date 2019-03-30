@@ -1,7 +1,7 @@
 # LetsDoThis
 All marathons are the same distance; however, courses vary dramatically in difficulty. The goal of this consulting project for <a href="https://www.letsdothis.com/">LetsDoThis</a> is to estimate the difficulty of a race in order to guide users to their next challenge. This project was done in 3 weeks as a part of the <a href="https://www.insightdatascience.com">Insight Data Science Program </a> in New York City. The final product is a web application, which utilizes Python, JavaScript, Flask, AWS, and SQL, and may be seen <a href="http://racedifficultyindex.com/">here</a>; note that the link will eventually die once I stop paying for it, and the site format has not been optimized for mobile.
 
-### Data Scraping and Cleaning
+### Data Scraping, Cleaning, and Feature Engineering
 Extensive scraping has been performed from two data sources:
 1. GPS coordinates (longitude, latitude, and elevation) of races, which allows one to calculate the elevation gain/loss, the standard deviation in the mean elevation (measure of hilliness), and the number of hills. This data was difficult to get but was done using Strava; you must find a Strava member's profile with public permissions in order to download the relevant GPX file.
 2. Race results from <a href="https://www.runbritainrankings.com/">runbritain</a> which includes finish times, personal information such as sex/age, and race metadata.
